@@ -1,4 +1,4 @@
 matrixStats
 precrec
-rjson
+jsonlite
 io

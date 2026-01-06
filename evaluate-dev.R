@@ -1,6 +1,5 @@
 library(io)
 library(precrec)
-library(rjson)
 
 source("R/common.R")
 
