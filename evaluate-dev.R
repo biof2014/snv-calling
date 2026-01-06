@@ -3,24 +3,32 @@ library(precrec)
 
 source("R/common.R")
 
-data.haploid <- read_data("data/haploid");
-y <- data.haploid$genotype;
 
-calls.haploid <- qread("calls/haploid.rds");
-
-# confusion matrix based on most probable genotype
-y.hat <- apply(calls.haploid, 1, which.max) - 1;
-table(y.hat, y)
+# make genotype calls based on highest probability
+# using probs matrix (locus x genotype levels)
+call_genotype <- function(probs) {
+	# substract 1 to convert from 1-based to 0-based index
+	apply(probs, 1, which.max) - 1
+}
 
 # evaluate calls against ground truth
-scores <- calls.haploid[, 2];
-ev <- evalmod(scores = scores, labels = y);
-aucs <- auc(ev);
-auroc <- aucs$aucs[aucs$curvetypes == "ROC"];
+get_auroc <- function(scores, labels) {
+	ev <- evalmod(scores = scores, labels = labels);
+	aucs <- auc(ev);
+	aucs$aucs[aucs$curvetypes == "ROC"]
+}
+
+
+y.haploid <- read_data("data/haploid")$genotype;
+calls.haploid <- qread("calls/haploid.rds");
 
 out <- list(
-	haploid = auroc
+	haploid = list(
+		cmat = table(call_genotype(calls.haploid), y.haploid),
+		auroc = get_auroc(calls.haploid[, 2], y.haploid)
+	)
 );
 
 print(out)
 qwrite(out, "evaluate-dev.json")
+
