@@ -13,9 +13,7 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-    - name: Setup R
-      run: apt-get install -y r-base r-cran-digest
-    - name: evaluate-dev
+    - name: Evaluation development
       id: evaluate-dev
       uses: classroom-resources/autograding-command-grader@v1
       with:
