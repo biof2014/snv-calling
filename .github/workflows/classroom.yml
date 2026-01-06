@@ -15,12 +15,13 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+    - name: Setup environment
+      run: ./setup.sh
     - name: Evaluation development
       id: evaluate-dev
       uses: classroom-resources/autograding-command-grader@v1
       with:
         test-name: evaluate-dev
-        setup-command: "sudo ./setup.sh"
         command: "./evaluate-dev.sh"
         timeout: 10
     - name: Autograding Reporter
