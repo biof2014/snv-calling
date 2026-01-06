@@ -15,9 +15,9 @@ jobs:
       uses: actions/checkout@v4
     - name: Install R
       uses: awalsh128/cache-apt-pkgs-action@latest
-        with:
-          packages:
-            r-base r-base-dev
+      with:
+        packages:
+          r-base r-base-dev
     - name: Evaluation development
       id: evaluate-dev
       uses: classroom-resources/autograding-command-grader@v1
