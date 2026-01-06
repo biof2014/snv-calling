@@ -5,3 +5,5 @@ set -euo pipefail
 IFS=$'\n\t'
 
 Rscript run.R 
+Rscript evaluate-dev.R
+

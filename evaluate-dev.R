@@ -16,4 +16,5 @@ out <- list(
 	haploid = auroc
 );
 
+print(out)
 qwrite(out, "evaluate-dev.json")
