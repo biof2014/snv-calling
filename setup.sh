@@ -14,5 +14,5 @@ curl -L https://github.com/djhshih/rip/archive/v0.3.tar.gz |
 	tar --strip-components=1 -xz
 )
 
-./bin/rip install -r requirements-r.txt
+sudo ./bin/rip install -r requirements-r.txt
 
