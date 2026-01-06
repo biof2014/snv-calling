@@ -14,13 +14,16 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
     - name: Install R
-      run: sudo apt install -y r-base r-base-dev
+      uses: awalsh128/cache-apt-pkgs-action@latest
+        with:
+          packages:
+            r-base r-base-dev
     - name: Evaluation development
       id: evaluate-dev
       uses: classroom-resources/autograding-command-grader@v1
       with:
         test-name: evaluate-dev
-        setup-command: "./setup.sh"
+        setup-command: "sudo ./setup.sh"
         command: "./evaluate-dev.sh"
         timeout: 10
     - name: Autograding Reporter
