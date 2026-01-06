@@ -16,7 +16,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
     - name: Install curl
-      run: apt install curl
+      run: apt install -y curl
     - name: Setup environment
       run: ./setup.sh
     - name: Evaluation development
