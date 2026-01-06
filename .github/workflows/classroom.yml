@@ -16,10 +16,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
     - name: Install curl
-      uses: awalsh128/cache-apt-pkgs-action@latest
-      with:
-        packages: curl
-        version: 1.0
+      run: apt install curl
     - name: Setup environment
       run: ./setup.sh
     - name: Evaluation development
