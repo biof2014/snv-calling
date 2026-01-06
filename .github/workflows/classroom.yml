@@ -9,15 +9,12 @@ permissions:
 jobs:
   run-autograding-tests:
     runs-on: ubuntu-latest
+    container:
+      image: rocker/r2u:latest
     if: github.actor != 'github-classroom[bot]'
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-    - name: Install R
-      uses: awalsh128/cache-apt-pkgs-action@latest
-      with:
-        packages:
-          r-base r-base-dev
     - name: Evaluation development
       id: evaluate-dev
       uses: classroom-resources/autograding-command-grader@v1
