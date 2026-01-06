@@ -15,6 +15,11 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+    - name: Install curl
+      uses: awalsh128/cache-apt-pkgs-action@latest
+        with:
+          packages:
+            curl
     - name: Setup environment
       run: ./setup.sh
     - name: Evaluation development
