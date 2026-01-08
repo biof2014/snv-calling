@@ -7,7 +7,7 @@ IFS=$'\n\t'
 # run models
 Rscript run-haploid.R
 Rscript run-diploid.R
-#Rscript run-somatic.R
+Rscript run-somatic.R
 
 # evaluate model outputs
 Rscript evaluate-dev.R
