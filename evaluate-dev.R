@@ -39,12 +39,12 @@ valid <- !is.na(zygosity);
 zygosity <- zygosity[valid];
 lprobs.homo <- get_zygosity_lprobs(lprobs.diploid[valid, ])[, 2];
 
-cmat.diploid <- table(call_genotype(lprobs.diploid), g.diploid);
+cmat.diploid <- table(g.diploid, call_genotype(lprobs.diploid));
 print(cmat.diploid)
 
 out <- list(
 	germline.haploid = list(
-		cmat = table(call_genotype(lprobs.haploid), g.haploid),
+		cmat = table(g.haploid, call_genotype(lprobs.haploid)),
 		auroc = list(
 			mutation = get_auroc(lprobs.haploid[, 2], g.haploid)
 		)
