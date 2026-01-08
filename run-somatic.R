@@ -1,3 +1,5 @@
+# Run somatic model
+
 source("R/common.R")
 
 data <- read_data("data/somatic");

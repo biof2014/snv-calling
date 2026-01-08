@@ -1,13 +1,10 @@
 # Run germline diploid models
 
-library(io)
-library(matrixStats)
-
 source("R/common.R");
 
 data <- read_data("data/diploid");
 
-# FIXME ineffective model
+# FIXME Replace with implementation of somatic model
 bad_model <- function(d) {
 	n.zeros <- sum(d$x == 0);
 	n.ones <- sum(d$x == 1);
