@@ -21,8 +21,12 @@ read_data <- function(path) {
 	lines <- readLines(file.path(path, "genotypes.txt"));
 	genotypes <- unlist(lapply(lines, as.integer));
 
+	# check that the lengths are the same
+	stopifnot(length(indicatorsl) == length(errorsl))
+	stopifnot(length(indicatorsl) == length(genotypes))
+
 	# merge the indicators list and errors list
-	ds <- mapply(
+	reads <- mapply(
 		function(x, e, g) {
 			list(x = x, e = e)
 		},
@@ -31,8 +35,14 @@ read_data <- function(path) {
 	);
 
 	list(
-		input = ds,
+		input = reads,
 		genotype = genotypes	
 	)
+}
+
+write_output <- function(obj, name) {
+	library(io)
+	fname <- filename(name, ext="rds", path="calls", date=NA);
+	qwrite(obj, fname);
 }
 

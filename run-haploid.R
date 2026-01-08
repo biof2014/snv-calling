@@ -1,7 +1,11 @@
+# Run germline haploid models
+
 library(io)
 library(matrixStats)
 
 source("R/common.R");
+
+# Germline haploid model
 
 # d  a data list containing:
 #   x  vector of read indicator (0: reference, 1: alternative)
@@ -9,15 +13,14 @@ source("R/common.R");
 call_one_snv_haploid <- function(d) {
 	x <- d$x;
 	e <- d$e;
+
+	log.prior <- log(1/2);
 	log.like <- c(
 		# p(x | g == 0)
 		sum( (1 - x)*log(1 - e) + x*log(e) ) ,
 		# p(x | g == 1)
 		sum( (1 - x)*log(e) + x*log(1 - e) )
 	);
-	
-	log.prior <- log(1/2);
-
 	log.post <- log.prior + log.like;
 	log.post <- log.post - logSumExp(log.post);
 
@@ -30,10 +33,9 @@ call_snvs_haploid <- function(ds) {
 	do.call(rbind, lapply(ds, call_one_snv_haploid))
 }
 
-data.haploid <- read_data("data/haploid");
+data <- read_data("data/haploid");
 
-calls.haploid <- call_snvs_haploid(data.haploid$input);
+calls <- call_snvs_haploid(data$input);
 
-calls.fn.haploid <- filename("haploid", ext="rds", path="calls", date=NA);
-qwrite(calls.haploid, calls.fn.haploid);
+write_output(calls, "haploid");
 

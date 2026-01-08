@@ -4,6 +4,11 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-Rscript run.R 
+# run models
+Rscript run-haploid.R
+Rscript run-diploid.R
+#Rscript run-somatic.R
+
+# evaluate model outputs
 Rscript evaluate-dev.R
 
