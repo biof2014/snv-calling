@@ -11,11 +11,27 @@ call_genotype <- function(lprobs) {
 	apply(lprobs, 1, which.max) - 1
 }
 
-get_zygosity_lprobs <- function(lprobs) {
-	# drop the wildtype log probs
-	lprobs <- lprobs[, -1];
+get_homozygous_lprobs <- function(lprobs) {
+	# keep only the heterozygous and homozygous lprobs
+	lprobs <- lprobs[, 2:3];
 	# re-normalize
 	t(apply(lprobs, 1, function(x) x - logSumExp(x)))
+}
+
+# prepare ground truth and log probs to prediction tasks
+prepare_data <- function(genotype, lprobs) {
+	# combine heterozygous and homozygous together for mutant prediction task
+	mutant <- as.integer(genotype > 0);
+	lprobs.mutant <- lprobs[, 2] + lprobs[, 3];
+	# drop the wildtype for homozygous prediction task
+	homozygous <- ifelse(genotype %in% 1:2, genotype - 1, NA);
+	valid <- !is.na(homozygous);
+	homozygous <- homozygous[valid];
+	lprobs.homo <- get_homozygous_lprobs(lprobs[valid, ])[, 2];
+	list(
+		mutant = mutant, lprobs.mutant = lprobs.mutant,
+		homozygous = homozygous, lprobs.homo = lprobs.homo, valid = valid
+	)
 }
 
 # evaluate calls against ground truth
@@ -26,38 +42,75 @@ get_auroc <- function(scores, labels) {
 }
 
 
+# germline haploid
+
 g.haploid <- read_data("data/haploid")$genotype;
 lprobs.haploid <- qread("calls/haploid.rds");
+stopifnot(ncol(lprobs.haploid) == 2)
+stopifnot(nrow(lprobs.haploid) == length(g.haploid));
 
-g.diploid <- read_data("data/diploid")$genotype;
-lprobs.diploid <- qread("calls/diploid.rds");
-lprobs.mutant <- lprobs.diploid[, 2] + lprobs.diploid[, 3];
+cmat.haploid <- table(g.haploid, call_genotype(lprobs.haploid));
+auroc.haploid <- get_auroc(lprobs.haploid[, 2], g.haploid);
 
-# drop the wildtype and determine the zygosity
-zygosity <- ifelse(g.diploid == 0, NA, g.diploid - 1);
-valid <- !is.na(zygosity);
-zygosity <- zygosity[valid];
-lprobs.homo <- get_zygosity_lprobs(lprobs.diploid[valid, ])[, 2];
-
-cmat.diploid <- table(g.diploid, call_genotype(lprobs.diploid));
-print(cmat.diploid)
-
-out <- list(
-	germline.haploid = list(
-		cmat = table(g.haploid, call_genotype(lprobs.haploid)),
-		auroc = list(
-			mutation = get_auroc(lprobs.haploid[, 2], g.haploid)
-		)
-	),
-	germline.diploid = list(
-		cmat = cmat.diploid,
-		auroc = list(
-			mutation = get_auroc(lprobs.mutant, g.diploid > 0),
-			zygosity = get_auroc(lprobs.homo, zygosity)
-		)
+germline.haploid <- list(
+	cmat = cmat.haploid,
+	auroc = list(
+		mutation = get_auroc(lprobs.haploid[, 2], g.haploid)
 	)
 );
 
+
+# germline diploid
+
+g.diploid <- read_data("data/diploid")$genotype;
+lprobs.diploid <- qread("calls/diploid.rds");
+stopifnot(ncol(lprobs.diploid) == 3)
+stopifnot(nrow(lprobs.diploid) == length(g.diploid));
+
+cmat.diploid <- table(g.diploid, call_genotype(lprobs.diploid));
+
+d.diploid <- prepare_data(g.diploid, lprobs.diploid);
+
+germline.diploid = list(
+	cmat = cmat.diploid,
+	auroc = list(
+		mutation = get_auroc(d.diploid$lprobs.mutant, d.diploid$mutant),
+		homozygous = get_auroc(d.diploid$lprobs.homo, d.diploid$homozygous)
+	)
+);
+
+
+# somatic
+
+g.somatic <- read_data("data/somatic")$genotype;
+# collapse joint genotypes involving germline variants together
+g.somatic[g.somatic > 2] <- 0;
+
+lprobs.somatic <- qread("calls/somatic.rds");
+stopifnot(ncol(lprobs.diploid) >= 3)
+stopifnot(nrow(lprobs.somatic) == length(g.somatic));
+
+cmat.somatic <- table(g.somatic, call_genotype(lprobs.somatic));
+
+d.somatic <- prepare_data(g.somatic, lprobs.somatic);
+
+somatic <- list(
+	cmat = cmat.somatic,
+	auroc = list(
+		mutation = get_auroc(d.somatic$lprobs.mutant, d.somatic$mutant),
+		homozygous = get_auroc(d.somatic$lprobs.homo, d.somatic$homozygous)
+	)
+);
+
+
+# write evaluation results
+
+out <- list(
+	germline.haploid = germline.haploid,
+	germline.diploid = germline.diploid,
+	somatic = somatic
+);
 print(out)
+
 qwrite(out, "evaluate-dev.json")
 
