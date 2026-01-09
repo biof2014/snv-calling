@@ -25,13 +25,13 @@ jobs:
       with:
         test-name: evaluate-dev
         command: ./evaluate.sh
-        timeout: 10
+        timeout: 5
     - name: Evaluation (production)
       id: evaluate-prod
       uses: classroom-resources/autograding-command-grader@v1
       with:
         test-name: evaluate-prod
         command: ./production.sh ${{ secrets.PROD_KEY }}
-        timeout: 10
+        timeout: 5
     - name: Report results
       run: ./report.sh
