@@ -9,21 +9,16 @@ permissions:
 jobs:
   run-autograding-tests:
     runs-on: ubuntu-latest
-    container:
-      image: rocker/r2u:latest
     if: github.actor != 'github-classroom[bot]'
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-    - name: Install curl
-      run: apt update -qq && apt install -y curl
-    - name: Setup environment
-      run: ./setup.sh
-    - name: Evaluation (development)
+    - name: evaluate-dev
       id: evaluate-dev
       uses: classroom-resources/autograding-command-grader@v1
       with:
         test-name: evaluate-dev
+        setup-command: "./setup.sh"
         command: "./evaluate-dev.sh"
         timeout: 10
     - name: Autograding Reporter
