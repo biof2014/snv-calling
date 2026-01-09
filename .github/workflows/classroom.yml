@@ -16,7 +16,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
     - name: Install dependencies
-      run: apt update -qq && apt install -y curl jq
+      run: apt update -qq && apt install -y curl jq git
     - name: Setup environment
       run: ./setup.sh
     - name: Evaluation (development)
@@ -24,7 +24,7 @@ jobs:
       uses: classroom-resources/autograding-command-grader@v1
       with:
         test-name: evaluate-dev
-        command: "./evaluate.sh"
+        command: ./evaluate.sh
         timeout: 10
     - name: Evaluation (production)
       id: evaluate-prod
