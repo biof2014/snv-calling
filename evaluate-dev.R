@@ -1,4 +1,5 @@
 library(io)
+library(jsonlite)
 library(precrec)
 library(matrixStats)
 
@@ -49,11 +50,18 @@ lprobs.haploid <- qread("calls/haploid.rds");
 stopifnot(ncol(lprobs.haploid) == 2)
 stopifnot(nrow(lprobs.haploid) == length(g.haploid));
 
-cmat.haploid <- table(g.haploid, call_genotype(lprobs.haploid));
+confusion_matrix <- function(pred, truth) {
+	levs <- sort(unique(truth));
+	truth <- factor(truth, levels=levs);
+	pred <- factor(pred, levels=levs);
+	table(truth, pred)
+}
+
+cmat.haploid <- confusion_matrix(call_genotype(lprobs.haploid), g.haploid);
 auroc.haploid <- get_auroc(lprobs.haploid[, 2], g.haploid);
 
 germline.haploid <- list(
-	cmat = cmat.haploid,
+	cmat = as.numeric(cmat.haploid),
 	auroc = list(
 		mutation = get_auroc(lprobs.haploid[, 2], g.haploid)
 	)
@@ -67,12 +75,12 @@ lprobs.diploid <- qread("calls/diploid.rds");
 stopifnot(ncol(lprobs.diploid) == 3)
 stopifnot(nrow(lprobs.diploid) == length(g.diploid));
 
-cmat.diploid <- table(g.diploid, call_genotype(lprobs.diploid));
+cmat.diploid <- confusion_matrix(call_genotype(lprobs.diploid), g.diploid);
 
 d.diploid <- prepare_data(g.diploid, lprobs.diploid);
 
 germline.diploid = list(
-	cmat = cmat.diploid,
+	cmat = as.numeric(cmat.diploid),
 	auroc = list(
 		mutation = get_auroc(d.diploid$lprobs.mutant, d.diploid$mutant),
 		homozygous = get_auroc(d.diploid$lprobs.homo, d.diploid$homozygous)
@@ -90,27 +98,40 @@ lprobs.somatic <- qread("calls/somatic.rds");
 stopifnot(ncol(lprobs.diploid) >= 3)
 stopifnot(nrow(lprobs.somatic) == length(g.somatic));
 
-cmat.somatic <- table(g.somatic, call_genotype(lprobs.somatic));
+cmat.somatic <- confusion_matrix(call_genotype(lprobs.somatic), g.somatic);
 
 d.somatic <- prepare_data(g.somatic, lprobs.somatic);
 
 somatic <- list(
-	cmat = cmat.somatic,
+	cmat = as.numeric(cmat.somatic),
 	auroc = list(
 		mutation = get_auroc(d.somatic$lprobs.mutant, d.somatic$mutant),
 		homozygous = get_auroc(d.somatic$lprobs.homo, d.somatic$homozygous)
 	)
 );
 
+aucs <- c(
+	germline.diploid$auroc$mutation,
+	germline.diploid$auroc$homozygous,
+	somatic$auroc$mutation,
+	somatic$auroc$homozygous
+);
 
-# write evaluation results
+grade.total <- 20;
+grade <- round(sum(aucs * total / length(aucs)));
+
+# output evaluation results
 
 out <- list(
 	germline.haploid = germline.haploid,
 	germline.diploid = germline.diploid,
-	somatic = somatic
+	somatic = somatic,
+	grade = list (
+		pass = grade,
+		total = grade.total
+	)
 );
-print(out)
 
-qwrite(out, "evaluate-dev.json")
+message(toJSON(out, pretty=TRUE))
+write_json(out, "evaluate-dev.json")
 

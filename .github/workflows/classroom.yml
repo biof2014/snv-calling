@@ -26,9 +26,14 @@ jobs:
         test-name: evaluate-dev
         command: "./evaluate-dev.sh"
         timeout: 10
-    - name: Autograding Reporter
-      uses: classroom-resources/autograding-grading-reporter@v1
-      env:
-        EVALUATE-DEV_RESULTS: "${{steps.evaluate-dev.outputs.result}}"
-      with:
-        runners: evaluate-dev
+    - name: Broadcast results
+      id: broadcast
+      run: |
+        json=$(cat ./evaluate-dev.json)
+        echo "json=$json" >> $GITHUB_OUTPUT
+    - name: Report results
+      run: |
+        PASS=${{ fromJSON(steps.broadcast.outputs.json).grade.pass }}
+        TOTAL=${{ fromJSON(steps.broadcast.outputs.json).grade.total }}
+        echo "::notice title=Autograding complete::Points ${PASS}/${TOTAL}"
+        echo "::notice title=Autograding report::{\"totalPoints\":${PASS},\"maxPoints\":${TOTAL}}"
