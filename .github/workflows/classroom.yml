@@ -28,10 +28,10 @@ jobs:
         timeout: 10
     - name: Evaluation (production)
       id: evaluate-prod
-      uses: classroom-resources/autograding-command-grader@v1
+      uses: biof2014/evaluate-prod@v1
       with:
-        test-name: evaluate-prod
-        command: ./production.sh ${{ secrets.PROD_KEY }}
-        timeout: 10
+        template-repo: biof2014/snv-calling
+        data-repo: biof2014/snv-calling-prod
+        targets: run-diploid.R run-somatic.R
     - name: Report results
       run: ./report.sh
