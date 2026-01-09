@@ -40,9 +40,9 @@ read_data <- function(path) {
 	)
 }
 
-write_output <- function(obj, name) {
+write_output <- function(obj, name, path="calls") {
 	library(io)
-	fname <- filename(name, ext="rds", path="calls", date=NA);
+	fname <- filename(name, ext="rds", path=path, date=NA);
 	qwrite(obj, fname);
 }
 
