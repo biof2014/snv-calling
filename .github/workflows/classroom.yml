@@ -31,7 +31,7 @@ jobs:
       uses: classroom-resources/autograding-command-grader@v1
       with:
         test-name: evaluate-prod
-        command: ./production.sh ${{ secrets.PROD_KEY }}
+        command: ./production.sh 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
         timeout: 10
     - name: Report results
       run: ./report.sh
