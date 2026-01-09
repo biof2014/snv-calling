@@ -33,7 +33,7 @@ jobs:
         echo "json=$json" >> $GITHUB_OUTPUT
     - name: Report results
       run: |
-        PASS=${{ fromJSON(steps.broadcast.outputs.json).grade.pass }}
-        TOTAL=${{ fromJSON(steps.broadcast.outputs.json).grade.total }}
+        PASS=${{ fromJSON(steps.broadcast.outputs.json).grade.pass[0] }}
+        TOTAL=${{ fromJSON(steps.broadcast.outputs.json).grade.total[0] }}
         echo "::notice title=Autograding complete::Points ${PASS}/${TOTAL}"
         echo "::notice title=Autograding report::{\"totalPoints\":${PASS},\"maxPoints\":${TOTAL}}"
