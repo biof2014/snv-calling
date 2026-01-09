@@ -117,8 +117,11 @@ aucs <- c(
 	somatic$auroc$homozygous
 );
 
+c0 <- 0.5;
+aucs.norm <- pmax(0, aucs - c0) / (1 - c0);
+
 grade.total <- 20;
-grade <- round(sum(aucs * grade.total / length(aucs)));
+grade <- round(sum(aucs.norm * grade.total / length(aucs.norm)));
 
 # output evaluation results
 
