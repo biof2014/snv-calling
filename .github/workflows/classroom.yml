@@ -19,12 +19,19 @@ jobs:
       run: apt update -qq && apt install -y curl jq
     - name: Setup environment
       run: ./setup.sh
-    - name: Evaluation (development)
+    - name: Evaluation (Development)
       id: evaluate-dev
       uses: classroom-resources/autograding-command-grader@v1
       with:
         test-name: evaluate-dev
-        command: "./evaluate-dev.sh"
+        command: "./evaluate.sh"
+        timeout: 10
+    - name: Evaluation (Production)
+      id: evaluate-prod
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: evaluate-prod
+        command: "./production.sh"
         timeout: 10
     - name: Report results
       run: |

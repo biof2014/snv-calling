@@ -15,13 +15,16 @@ key=$1
 rm -rf prod
 git clone --depth=1 https://github.com/biof2014/snv-calling prod
 
-# get production data
-(
+# production environment
+
 cd prod
+
+# get production data
 rm -rf data
 git clone --depth=1 https://${key}@github.com/biof2014/snv-calling-prod data
-)
 
 # copy over models
-cp run-diploid.R run-somatic.R prod/
+cp ../run-diploid.R ../run-somatic.R .
+
+./evaluate.sh
 

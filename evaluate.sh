@@ -10,5 +10,5 @@ Rscript run-diploid.R
 Rscript run-somatic.R
 
 # evaluate model outputs
-Rscript evaluate-dev.R
+Rscript evaluate.R
 
