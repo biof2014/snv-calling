@@ -26,14 +26,9 @@ jobs:
         test-name: evaluate-dev
         command: "./evaluate-dev.sh"
         timeout: 10
-    - name: Broadcast results
-      id: broadcast
-      run: |
-        json=$(cat ./evaluate-dev.json)
-        echo "json=$json" >> $GITHUB_OUTPUT
     - name: Report results
       run: |
-        PASS=${{ fromJSON(steps.broadcast.outputs.json).grade.pass[0] }}
-        TOTAL=${{ fromJSON(steps.broadcast.outputs.json).grade.total[0] }}
+        PASS=$(jq ".grade.pass[0]" evaluate-dev.json)
+        TOTAL=$(jq ".grade.total[0]" evaluate-dev.json)
         echo "::notice title=Autograding complete::Points ${PASS}/${TOTAL}"
         echo "::notice title=Autograding report::{\"totalPoints\":${PASS},\"maxPoints\":${TOTAL}}"
