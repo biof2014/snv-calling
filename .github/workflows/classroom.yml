@@ -34,20 +34,4 @@ jobs:
         command: ./production.sh ${{ secrets.PROD_KEY }}
         timeout: 10
     - name: Report results
-      run: |
-        json_dev="evaluate.json"
-        json_prod="prod/evaluate.json"
-        echo "Development:"
-        jq . $json_dev
-        echo "Production:"
-        jq . $json_prod
-        pass_dev="$(jq .grade.pass[0] $json_dev)
-        total_dev=$(jq .grade.total[0] $json_dev)
-        echo "Development score: $pass_dev / $total_dev"
-        pass_prod="$(jq .grade.pass[0] $json_prod)
-        total_prod=$(jq .grade.total[0] $json_prod)
-        echo "Production score: $pass_prod / $total_prod"
-        pass=$(( pass_dev + 2 * pass_prod ))
-        total=$(( total_dev + 2 * total_prod ))
-        echo "::notice title=Autograding complete::Points ${pass}/${total}"
-        echo "::notice title=Autograding report::{\"totalPoints\":${pass},\"maxPoints\":${total}}"
+      run: ./report.sh
