@@ -15,8 +15,8 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-    - name: Install curl
-      run: apt update -qq && apt install -y curl
+    - name: Install dependencies
+      run: apt update -qq && apt install -y curl jq
     - name: Setup environment
       run: ./setup.sh
     - name: Evaluation (development)
