@@ -19,14 +19,14 @@ jobs:
       run: apt update -qq && apt install -y curl jq
     - name: Setup environment
       run: ./setup.sh
-    - name: Evaluation (Development)
+    - name: Evaluation (development)
       id: evaluate-dev
       uses: classroom-resources/autograding-command-grader@v1
       with:
         test-name: evaluate-dev
         command: "./evaluate.sh"
         timeout: 10
-    - name: Evaluation (Production)
+    - name: Evaluation (production)
       id: evaluate-prod
       uses: classroom-resources/autograding-command-grader@v1
       with:
@@ -35,9 +35,19 @@ jobs:
         timeout: 10
     - name: Report results
       run: |
-        json="evaluate-dev.json"
-        jq . $json
-        PASS=$(jq ".grade.pass[0]" $json)
-        TOTAL=$(jq ".grade.total[0]" $json)
-        echo "::notice title=Autograding complete::Points ${PASS}/${TOTAL}"
-        echo "::notice title=Autograding report::{\"totalPoints\":${PASS},\"maxPoints\":${TOTAL}}"
+        json_dev="evaluate.json"
+        json_prod="prod/evaluate.json"
+        echo "Development:"
+        jq . $json_dev
+        echo "Production:"
+        jq . $json_prod
+        pass_dev="$(jq .grade.pass[0] $json_dev)
+        total_dev=$(jq .grade.total[0] $json_dev)
+        echo "Development score: $pass_dev / $total_dev"
+        pass_prod="$(jq .grade.pass[0] $json_prod)
+        total_prod=$(jq .grade.total[0] $json_prod)
+        echo "Production score: $pass_prod / $total_prod"
+        pass=$(( pass_dev + 2 * pass_prod ))
+        total=$(( total_dev + 2 * total_prod ))
+        echo "::notice title=Autograding complete::Points ${pass}/${total}"
+        echo "::notice title=Autograding report::{\"totalPoints\":${pass},\"maxPoints\":${total}}"
