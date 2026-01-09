@@ -118,7 +118,7 @@ aucs <- c(
 );
 
 grade.total <- 20;
-grade <- round(sum(aucs * total / length(aucs)));
+grade <- round(sum(aucs * grade.total / length(aucs)));
 
 # output evaluation results
 
