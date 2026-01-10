@@ -13,9 +13,9 @@ nucleotide variants (SNVs) using summarized sequencing data.
 
 2. Run the model evaluation by
 ```
-./evaluate-dev.sh
+./evaluate.sh
 ```
-If successful, the evaluation results will be in `evaluate-dev.json`.
+If successful, the evaluation results will be in `evaluate.json`.
 
 3. As the evaluation results show, the stub implementations of the 
    diploid and somatic models are ineffective.
