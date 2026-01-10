@@ -50,17 +50,17 @@ and `somatic.rds` in RDS format.
 
 ## Important remarks for students
 
-- Your model must *not* use the genotype. If `run-diploid.R` and `run-somatic.R`
-  reads the genotype or any derivative thereof, your prediction score will be
-  set to 0.
-- Any attempts to temper with the grading system will result in a grade of 0
-  for this project.
+- Any attempts to temper with the grading system will result in a final grade 
+  of 0 for this project.
 - Do *not* change any other files. Your models will be evaluated in a new
   clone of the original Github project repo, and 
   only your `run-diploid.R` and `run-somatic.R` will be copied over.
 - Do *not* share your code with anyone.
-  If your code is similar to another person's code, your novelty
+  If your code is highly similar to another person's code, your novelty
   score will be low.
 - Ensure that your models do *not* depend on packages that are not in
   `requirements-r.txt`, and do *not* add packages to `requirements-r.txt`.
+- Your model must *not* use the genotype data. If `run-diploid.R` and 
+  `run-somatic.R` reads the genotype data or any derivative thereof, your 
+  prediction score will be set to 0.
 
