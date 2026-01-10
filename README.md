@@ -41,8 +41,8 @@ at your Github project repo.
 ## Specification
 
 The output of your model should be a log probability matrix (or at least a score
-matrix) with J rows and K columns, where J is the number of loci, and K
-is the number of genotype levels. For the diploid and somatic models, K = 3.
+matrix) with *J* rows and *K* columns, where *J* is the number of loci, and *K*
+is the number of genotype levels. For the diploid and somatic models, *K* = 3.
 
 This output must be saved in the `calls` directory with file names `diploid.rds`
 and `somatic.rds` in RDS format.
