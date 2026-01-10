@@ -33,9 +33,9 @@ call_snvs_haploid <- function(ds) {
 	do.call(rbind, lapply(ds, call_one_snv_haploid))
 }
 
-data <- read_data("data/haploid");
+input <- read_data("data/haploid");
 
-calls <- call_snvs_haploid(data$input);
+calls <- call_snvs_haploid(input);
 
 write_output(calls, "haploid");
 

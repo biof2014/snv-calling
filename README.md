@@ -38,6 +38,9 @@ at your Github project repo.
 
 ## Important remarks for students
 
+- Your model must *not* use the genotype. If `run-diploid.R` and `run-somatic.R`
+  reads the genotype or any derivative thereof, your prediction score will be
+  set to 0.
 - Any attempts to temper with the grading system will result in a grade of 0
   for this project.
 - Do *not* change any other files. Your models will be evaluated in a new

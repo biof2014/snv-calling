@@ -45,7 +45,7 @@ get_auroc <- function(scores, labels) {
 
 # germline haploid
 
-g.haploid <- read_data("data/haploid")$genotype;
+g.haploid <- read_genotype("data/haploid");
 lprobs.haploid <- qread("calls/haploid.rds");
 stopifnot(ncol(lprobs.haploid) == 2)
 stopifnot(nrow(lprobs.haploid) == length(g.haploid));
@@ -70,7 +70,7 @@ germline.haploid <- list(
 
 # germline diploid
 
-g.diploid <- read_data("data/diploid")$genotype;
+g.diploid <- read_genotype("data/diploid");
 lprobs.diploid <- qread("calls/diploid.rds");
 stopifnot(ncol(lprobs.diploid) == 3)
 stopifnot(nrow(lprobs.diploid) == length(g.diploid));
@@ -90,7 +90,7 @@ germline.diploid = list(
 
 # somatic
 
-g.somatic <- read_data("data/somatic")$genotype;
+g.somatic <- read_genotype("data/somatic/tumour");
 # collapse joint genotypes involving germline variants together
 g.somatic[g.somatic > 2] <- 0;
 

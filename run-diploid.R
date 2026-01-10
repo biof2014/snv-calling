@@ -2,7 +2,7 @@
 
 source("R/common.R");
 
-data <- read_data("data/diploid");
+input <- read_input("data/diploid");
 
 # FIXME Replace with implementation of somatic model
 bad_model <- function(d) {
@@ -18,6 +18,6 @@ bad_model <- function(d) {
 	)
 }
 
-calls <- do.call(rbind, lapply(data$input, bad_model));
+calls <- do.call(rbind, lapply(input, bad_model));
 write_output(calls, "diploid");
 
