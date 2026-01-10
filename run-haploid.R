@@ -5,15 +5,10 @@ library(matrixStats)
 
 source("R/common.R");
 
-# Germline haploid model
-
-# d  a data list containing:
-#   x  vector of read indicator (0: reference, 1: alternative)
-#   e  vector of read error probabilities
-call_one_snv_haploid <- function(d) {
-	x <- d$x;
-	e <- d$e;
-
+# Call SNV under germline haploid model
+# param x  vector of read indicator (0: reference, 1: alternative)
+# param e  vector of read error probabilities
+call_snv_haploid <- function(x, e) {
 	log.prior <- log(1/2);
 	log.like <- c(
 		# p(x | g == 0)
@@ -28,9 +23,9 @@ call_one_snv_haploid <- function(d) {
 	log.post
 }
 
-# ds  a list of data lists
+# param ds  a list of data lists
 call_snvs_haploid <- function(ds) {
-	do.call(rbind, lapply(ds, call_one_snv_haploid))
+	do.call(rbind, lapply(ds, function(d) call_snv_haploid(d$x, d$e)))
 }
 
 input <- read_input("data/haploid");
