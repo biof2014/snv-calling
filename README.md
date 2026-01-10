@@ -1,6 +1,8 @@
 # SNV calling
 
-In this project, you will implement statistical models in R 
+In this project, you will implement statistical models in R to call single
+nucleotide variants (SNVs) using summarized sequencing data.
+
 
 ## Instructions
 
@@ -34,6 +36,16 @@ git push
 ```
 Then, you can see your workflow status under the `Actions` tab
 at your Github project repo.
+
+
+## Specification
+
+The output of your model should be a log probability matrix (or at least a score
+matrix) with J rows and K columns, where J is the number of loci, and K
+is the number of genotype levels. For the diploid and somatic models, K = 3.
+
+This output must be saved in the `calls` directory with file names `diploid.rds`
+and `somatic.rds` in RDS format.
 
 
 ## Important remarks for students
