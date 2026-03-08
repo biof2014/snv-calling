@@ -11,11 +11,27 @@ nucleotide variants (SNVs) using summarized sequencing data.
 ./setup.sh
 ```
 
+If you encounter the following error:
+```
+trying to use CRAN without setting a mirror
+```
+Then install R packages within R using `install.packages`.
+The required packages are in `requirements-r.txt`.
+
 2. Run the model evaluation by
 ```
 ./evaluate.sh
 ```
 If successful, the evaluation results will be in `evaluate.json`.
+
+If you encounter errors the following error:
+```
+Rscript: no such file or directory
+```
+It means that your `PATH` environmental variable is not setup properly with the
+path to `Rscript`.
+In this case, you should run `run-diploid.R`, `run-somatic.R`, and `evaluate.R`
+manually within RStudio each time you want to evaluate the models.
 
 3. As the evaluation results show, the stub implementations of the 
    diploid and somatic models are ineffective.
