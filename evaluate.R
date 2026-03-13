@@ -23,7 +23,7 @@ get_homozygous_lprobs <- function(lprobs) {
 prepare_data <- function(genotype, lprobs) {
 	# combine heterozygous and homozygous together for mutant prediction task
 	mutant <- as.integer(genotype > 0);
-	lprobs.mutant <- lprobs[, 2] + lprobs[, 3];
+	lprobs.mutant <- apply(lprobs[, -1, drop=FALSE], 1, logSumExp);
 	# drop the wildtype for homozygous prediction task
 	homozygous <- ifelse(genotype %in% 1:2, genotype - 1, NA);
 	valid <- !is.na(homozygous);
